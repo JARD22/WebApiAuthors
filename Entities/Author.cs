@@ -4,7 +4,7 @@ using WebApiAutores.Validators;
 
 namespace WebApiAutores.Entities
 {
-    public class Author
+    public class Author: IValidatableObject
     {
         public int id { get; set; }
 
@@ -18,5 +18,18 @@ namespace WebApiAutores.Entities
         public int age { get; set; }
 
         public List<Book> Books { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                var firstLetter = name[0].ToString();
+                if (firstLetter != firstLetter.ToUpper())
+                {
+                    yield return new ValidationResult("the first letter must be capitalized",
+                        new string[] {nameof(name)});
+                }
+            }
+        }
     }
 }
